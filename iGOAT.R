@@ -1,7 +1,4 @@
 library(kknn)
-# GWAS file
-disease <- "MDD"
-gene_path <- "All_human_genes"
 iGOAT <- function(disease, gene_path, flanking = 1000000){
   all_gene <- read.delim(gene_path,as.is=T)
   all_gene <- all_gene[!is.na(all_gene$official_name),]
@@ -32,6 +29,7 @@ iGOAT <- function(disease, gene_path, flanking = 1000000){
       gene1 <- rbind(gene1,temp)
     }
   } 
+  
   # collect candidate genes based on 3D interaction
   brainCP <- read.table("HiC/S22_TSS_CP.txt",as.is = T,header = T)
   brainGZ <- read.table("HiC/S23_TSS_GZ.txt",as.is = T,header = T)
@@ -67,6 +65,7 @@ iGOAT <- function(disease, gene_path, flanking = 1000000){
   }
   gene <- candidate_gene
   write.table(gene,paste(disease,"candidate_genes.txt",sep = "_"),sep = "\t",quote = F,row.names = F)
+  cat("collecting candidate genes ends.\n")
   # DTS
   index <- gene$strand=="+"
   tss_dist<-0
@@ -86,6 +85,7 @@ iGOAT <- function(disease, gene_path, flanking = 1000000){
   gene$neuron_count[is.na(gene$neuron_count)] <- 0
   gene$oligo_count[is.na(gene$oligo_count)] <- 0
   gene$micro_count[is.na(gene$micro_count)] <- 0
+  cat("collecting omics data ends.\n")
   # Gibbs sampling
   load("eQTL/cis_and_trans_eQTL.RData")
   load(paste(disease,"_GO+BioGRID+HIPP+DD_p11.Rdata",sep = ""))
@@ -135,6 +135,7 @@ iGOAT <- function(disease, gene_path, flanking = 1000000){
     pick <- sample(ind,sample_size,replace = F)
   }
   freq0 <- rep(0,n)
+  cat("sampling starts.\n")
   while(dif > thres){
     iter <- iter+1
     num <- num0
