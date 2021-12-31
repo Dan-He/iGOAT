@@ -148,8 +148,9 @@ iGOAT <- function(disease, gene_path, flanking = 1000000){
     dif <- norm(freq-freq0,"2")
     num0 <- num
   }
+  cat("sampling ends.\n")
   gene2$pp <- freq
   gene2$num <- num
   gene2
 }
-gene2 <- iGOAT("PD","All_human_genes")
+gene2 <- iGOAT("PD","All_human_genes")#running example
